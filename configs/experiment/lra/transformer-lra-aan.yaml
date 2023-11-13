@@ -1,0 +1,43 @@
+# @package _global_
+defaults:
+  - /pipeline: aan
+  - /model: transformer
+  - override /scheduler: constant_warmup
+
+model:
+  dropout: 0.
+  n_layers: 4
+  prenorm: true
+  d_model: 128
+  norm: layer # batch
+  layer:
+    - _name_: mhfa
+      causal: false
+      n_heads: 4
+      dropout: null
+      bias: True
+      add_bias_kv: False  # not implementd yet
+      add_zero_attn: False # not implementd yet
+      kdim: null  # not implementd yet
+      vdim: null  # not implementd yet
+    - _name_: ff
+      expand: 4
+      activation: gelu
+      dropout: ${...dropout} # Same as null
+
+loader:
+  batch_size: 32
+
+optimizer:
+  lr: 0.05
+  weight_decay: 0.0
+
+scheduler:
+#  num_training_steps: 50000
+  num_warmup_steps: 5000 # 1 epoch
+
+trainer:
+  max_epochs: 32
+
+train:
+  seed: 2222

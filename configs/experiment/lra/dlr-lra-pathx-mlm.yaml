@@ -1,0 +1,60 @@
+# @package _global_
+defaults:
+  - /pipeline: pathfinder-lm
+  - /model: dlr
+  - override /scheduler: constant_warmup # cosine_warmup
+
+scheduler:
+#  num_training_steps: 250000 # 50 epochs
+  num_warmup_steps: 5000 # 1 epoch
+
+model:
+  dropout: 0.
+  n_layers: 6
+  prenorm: true
+  d_model: 256
+  norm: layer
+  layer:
+    activation: gelu
+    postact: glu
+    bidirectional: true
+    lr:
+      Lambda: 0.0001
+      W: 0.0001
+      dt_min: 0.0001
+      dt_max: 0.001
+    max_kernel_length: null    # 8192 works well & is faster
+
+dataset:
+    resolution: 128
+    sequential: True
+    val_split: 0.1
+    test_split: 0.1
+
+    mlm_prob: 0.0        # if 0 then sequence-level classification
+    causal_lm: false      # ${eval:not ${model.layer.bidirectional}}
+    lm_loss: ce           # l1 loss, use ce for classification
+    ignore_val: True      # if True ignore none masked tokens (-100 for CE, -10000 fr L1)
+
+loader:
+  batch_size: 32
+  num_workers: 4
+
+optimizer:
+  lr: 0.0005
+  weight_decay: 0.05
+
+trainer:
+  max_epochs: 50
+
+train:
+  seed: 2222
+  interval: step # For cosine scheduler
+  monitor: val/accuracy_ignore_m100  # Needed for plateau scheduler
+#  monitor: val/mae  # Needed for plateau scheduler
+  mode: max
+
+task:
+  loss: cross_entropy  #class_weighted_cross_entropy
+  metrics:
+    - accuracy_ignore_m100

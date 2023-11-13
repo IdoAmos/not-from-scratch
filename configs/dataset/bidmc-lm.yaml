@@ -1,0 +1,13 @@
+_name_: bidmc_lm
+target: RR # 'RR' | 'HR' | 'SpO2'
+prediction: False
+reshuffle: True
+__l_max: 4000
+
+# Masked LM parameters
+mlm_prob: 0  # self pre-training : prob of masking out a pixel
+causal_lm: False  # self pre-training : predict next pixel in sequence
+lm_loss: l1  # self pre-training loss: cross-entropy (ce) or l1
+ignore_val: True  # self pre-training: ignore the loss at masked pixels
+span_masking: False
+span_length: 0

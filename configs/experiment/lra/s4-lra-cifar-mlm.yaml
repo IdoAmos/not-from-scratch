@@ -1,0 +1,62 @@
+# @package _global_
+defaults:
+  - /pipeline: cifar-lm
+  - /model: s4
+  - override /scheduler: constant_warmup # cosine_warmup
+
+model:
+  dropout: 0.1
+  tie_dropout: true
+  n_layers: 6
+  d_model: 512
+  prenorm: false
+  norm: layer
+  layer:
+    d_state: 64
+    lr:
+      dt: null
+      A: 0.001
+      B: 0.001
+    dt_min: 0.001
+    dt_max: 0.1
+    measure: legs
+    bidirectional: true
+    postact: glu
+    n_ssm: 2
+
+dataset:
+  mlm_prob: 0.5        # if 0 then sequence-level classification
+  causal_lm: false      # ${eval:not ${model.layer.bidirectional}}
+  lm_loss: l1           # l1 loss, use ce for classification
+  ignore_val: True      # if True ignore none masked tokens (-100 for CE, -10000 fr L1)
+
+loader:
+  batch_size: 50
+
+optimizer:
+  lr: 0.01
+  weight_decay: 0.05
+
+trainer:
+  max_epochs: 200
+
+#scheduler:
+#  num_training_steps: 200000
+
+train:
+  seed: 2222
+  interval: step # For cosine scheduler
+  monitor: val/masked_mae  # Needed for plateau scheduler
+  mode: min
+
+#task:
+#  loss: cross_entropy  #class_weighted_cross_entropy
+#  metrics:
+#    - accuracy_ignore_m100
+
+task:
+  loss: masked_mae
+  metrics:
+    - masked_mae
+    - masked_r2
+  torchmetrics: null

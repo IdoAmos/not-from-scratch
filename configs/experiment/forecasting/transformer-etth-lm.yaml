@@ -1,0 +1,46 @@
+# @package _global_
+defaults:
+  - /pipeline: informer-lm
+  - /model: transformer
+  - override /dataset: etth-lm
+
+dataset:
+  variant: 0  # 0 | 1
+  features: 'S'  # S| M  multivariate
+#  size:
+#    - 384
+#    - 96
+#    - 96
+
+model:
+  dropout: 0.25
+  n_layers: 2
+  prenorm: true
+  d_model: 128
+  norm: layer # batch
+  encoder: position
+  layer:
+    - _name_: mhfa
+      causal: true
+      n_heads: 4
+      dropout: null
+      rotary: false
+      bias: true
+      add_bias_kv: False  # not implementd yet
+      add_zero_attn: False # not implementd yet
+      kdim: null  # not implementd yet
+      vdim: null  # not implementd yet
+    - _name_: ff
+      expand: 1
+      activation: gelu
+      dropout: ${...dropout} # Same as null
+
+trainer:
+  max_epochs: 100
+
+loader:
+  batch_size: 50
+
+
+optimizer:
+  lr: 0.01

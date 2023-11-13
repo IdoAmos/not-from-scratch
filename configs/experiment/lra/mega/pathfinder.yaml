@@ -1,0 +1,54 @@
+# @package _global_
+defaults:
+  - /pipeline: pathfinder
+  - /model: mrga
+  - override /scheduler: constant_warmup # cosine_warmup
+
+scheduler:
+#  num_training_steps: 1000000 # 500000 # 200 epochs
+  num_warmup_steps: 5000 # 1 epoch
+
+model:
+  dropout: 0.
+  n_layers: 6
+  prenorm: true
+  d_model: 128
+  layer:
+    _name_: mega
+    d_attin: 64   # Default for LRA-Image
+    d_attout: 256  # Default for LRA-Image
+    d_state: 16   # Default for LRA-Image
+    activation: silu
+    attention_activation: laplace
+    bidirectional: true
+    chunk: -1
+    l_max: null
+    norm: batch_sync
+    prenorm: true
+    tie_dropout: false
+    rel_pos_bias: simple
+    max_positions: 4000
+    ff_expand: 2  # Expansion factor for FFN
+    dropout: 0.0
+    drop_attin: 0.0
+    drop_attout: 0.0
+    drop_ffn: 0.0
+    transposed: false
+
+decoder:
+#  _name_: sequence_nonelinear
+  mode: pool
+
+loader:
+  batch_size: 32
+
+optimizer:
+  lr: 0.0005
+  weight_decay: 0.0
+
+trainer:
+  max_epochs: 200
+
+train:
+  seed: 2222
+  interval: step

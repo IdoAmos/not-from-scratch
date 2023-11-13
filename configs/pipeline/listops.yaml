@@ -1,0 +1,10 @@
+# @package _global_
+defaults:
+  - imdb
+  - override /dataset: listops
+
+train:
+  monitor: val/accuracy # Needed for plateau scheduler
+  mode: max
+
+encoder: embedding

@@ -1,0 +1,41 @@
+# @package _global_
+defaults:
+  - /pipeline: cifar
+  - /model: dlr
+  - override /scheduler: constant_warmup # cosine_warmup
+
+model:
+  dropout: 0.0
+  n_layers: 6
+  d_model: 512
+  prenorm: true
+  norm: layer
+  layer:
+    activation: gelu
+    postact: glu
+    bidirectional: true
+    lr:
+      Lambda: 0.0001
+      W: 0.0001
+      dt_min: 0.0001
+      dt_max: 0.001
+    max_kernel_length: null    # 8192 works well & is faster
+
+dataset:
+  grayscale: true
+
+loader:
+  batch_size: 50
+
+optimizer:
+  lr: 0.01
+  weight_decay: 0.05
+
+trainer:
+  max_epochs: 200
+
+#scheduler:
+#  num_training_steps: 200000
+
+train:
+  seed: 2222

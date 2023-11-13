@@ -1,0 +1,19 @@
+# _target_: src.datamodules.aan.AAN
+_name_: aan_lm
+
+# data_dir: ${oc.env:DATA_DIR,${data_dir}}/aan/tsv_data # data_dir is specified in config.yaml
+l_max: 4000
+max_vocab: 100 # Full size 98, 99 with mask token
+append_bos: False
+append_eos: True
+# __train_len: 147086
+__l_max: ${.l_max}
+
+# Language modeling params - doesn't exist in source dataset
+sequential: True
+mlm_prob: 0.0  # self pre-training : prob of masking out a pixel
+causal_lm: False  # self pre-training : predict next pixel in sequence
+lm_loss: ce  # self pre-training loss: cross-entropy (ce) or l1
+ignore_val: True  # ignore the loss at masked pixels
+span_masking: False
+span_length: 0

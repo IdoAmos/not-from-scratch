@@ -1,0 +1,14 @@
+# @package _global_
+defaults:
+  - /trainer: default
+  - /loader: default
+  - /dataset: chomsky
+  - /task: multiclass_classification
+  - /optimizer: adam
+  - /scheduler: constant
+
+encoder: embedding
+
+decoder:
+  _name_: sequence
+  mode: pool

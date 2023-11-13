@@ -1,0 +1,15 @@
+_name_: pathfinder_segmentation
+
+# data_dir: null
+resolution: 128
+sequential: True
+tokenize: False
+autoregressive: False
+pool: 1
+all_corners: False
+val_split: 0.1
+test_split: 0.1
+seed: 42 # Controls the train/val/test split
+# __dataset_len: ${eval:599999 if ${.__resolution} == 32 else 600000}
+# __train_len: ${eval:int\(${__dataset_len} * \(1 - ${.val_split} - ${.test_split}\)\)}
+__l_max: ${eval:${.resolution}**2 // ${.pool}**2}

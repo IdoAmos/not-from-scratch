@@ -1,0 +1,28 @@
+# @package _global_
+defaults:
+  - /trainer: default
+  - /loader: default
+  - /dataset: cifar-lm
+  - /optimizer: adamw
+  - /scheduler: constant_warmup
+
+train:
+  monitor: val/masked_mae # Needed for plateau scheduler
+  mode: min
+
+task:
+  _name_: base
+  loss: masked_mae
+  metrics:
+    - masked_mae
+    - masked_r2
+  torchmetrics: null
+
+encoder: linear
+
+decoder:
+  _name_: sequence
+  mode: last
+
+trainer:
+  val_check_interval: 0.5

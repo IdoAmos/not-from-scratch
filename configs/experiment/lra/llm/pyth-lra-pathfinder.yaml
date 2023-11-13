@@ -1,0 +1,37 @@
+# @package _global_
+defaults:
+  - /pipeline: pathfinder
+  - /model: pythia_lm
+  - override /scheduler: constant_warmup
+
+scheduler:
+#  num_training_steps: 500000 # 200 epochs
+  num_warmup_steps: 2500 # 1 epoch
+
+model:
+  causal: false
+  pretrained: true
+
+# encoder happens inside model
+encoder: id
+
+dataset:
+  tokenize: true
+  grayscale: true
+
+loader:
+  batch_size: 1
+
+decoder:
+  mode: last
+
+optimizer:
+  lr: 0.004
+#  weight_decay: 0.03
+
+trainer:
+  max_epochs: 200
+
+train:
+  seed: 2222
+  interval: step

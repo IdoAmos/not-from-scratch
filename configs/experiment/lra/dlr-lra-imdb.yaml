@@ -1,0 +1,46 @@
+# @package _global_
+defaults:
+  - /pipeline: imdb
+  - /model: dlr
+  - override /scheduler: constant_warmup # cosine_warmup
+
+decoder:
+  mode: pool
+
+model:
+  dropout: 0.0
+  n_layers: 6
+  d_model: 256
+  prenorm: true
+  norm: layer
+  layer:
+    activation: gelu
+    postact: glu
+    bidirectional: true
+    lr:
+      Lambda: 0.0001
+      W: 0.0001
+      dt_min: 0.0001
+      dt_max: 0.001
+    max_kernel_length: null    # 8192 works well & is faster
+
+dataset:
+  l_max: 4096
+  level: char
+
+loader:
+  batch_size: 16
+
+optimizer:
+  lr: 0.01
+  weight_decay: 0.05
+
+scheduler:
+#  num_training_steps: 50000
+  num_warmup_steps: 2000 # 5000
+
+trainer:
+  max_epochs: 32
+
+train:
+  seed: 2222

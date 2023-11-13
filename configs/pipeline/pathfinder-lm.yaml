@@ -1,0 +1,37 @@
+# @package _global_
+defaults:
+  - /trainer: default
+  - /optimizer: adamw
+  - /scheduler: constant
+  - /loader: default # torch
+  - /dataset: pathfinder-lm
+
+train:
+  # monitor: val/accuracy_ignore_m100  # Needed for plateau scheduler
+  monitor: val/masked_mae  # Needed for plateau scheduler
+  mode: min
+
+# task:
+#   _name_: base
+#   loss: cross_entropy 
+#   metrics:
+#     - accuracy_ignore_m100
+#   torchmetrics: null
+
+task:
+  _name_: base
+  loss: masked_mae
+  metrics:
+    - mae
+    - r2
+  torchmetrics: null
+
+encoder: linear
+
+decoder:
+  _name_: sequence
+  mode: last
+  
+trainer:
+  val_check_interval: 0.5
+

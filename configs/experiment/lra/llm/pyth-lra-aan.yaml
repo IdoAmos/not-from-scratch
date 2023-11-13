@@ -1,0 +1,29 @@
+# @package _global_
+defaults:
+  - /pipeline: aan
+  - /model: pythia_lm
+  - override /scheduler: constant_warmup
+
+model:
+  causal: false
+  pretrained: true
+# encoder happens inside model
+encoder: id
+
+scheduler:
+#  num_training_steps: 50000 # 20 epochs
+  num_warmup_steps: 2500 # 1 epoch
+
+loader:
+  batch_size: 1
+
+optimizer:
+  lr: 0.01
+#  weight_decay: 0.05
+
+trainer:
+  max_epochs: 20
+
+train:
+  seed: 2222
+  interval: step

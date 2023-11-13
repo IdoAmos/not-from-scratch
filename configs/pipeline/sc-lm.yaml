@@ -1,0 +1,32 @@
+# @package _global_
+defaults:
+  - /trainer: default
+  - /loader: resolution
+  - /dataset: sc-lm
+  - /task: multiclass_classification
+  - /optimizer: adamw
+  - /scheduler: plateau
+
+train:
+  monitor: val/masked_mae # Needed for plateau scheduler
+  mode: max
+
+task:
+  _name_: base
+  loss: masked_mae
+  metrics:
+    - masked_mae
+    - masked_r2
+  torchmetrics: null
+
+encoder: linear
+
+decoder:
+  _name_: sequence
+  mode: last
+
+loader:
+  train_resolution: 1
+  eval_resolutions: 1
+#    - 1
+#    - 2

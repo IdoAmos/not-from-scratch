@@ -1,0 +1,77 @@
+# @package _global_
+defaults:
+  - /pipeline: pathfinder-lm
+  - /model: transformer
+  - override /scheduler: constant_warmup # cosine_warmup
+
+scheduler:
+#  num_training_steps: 250000 # 50 epochs
+  num_warmup_steps: 2500 # 1 epoch
+
+model:
+  dropout: 0.
+  n_layers: 4
+  prenorm: true
+  d_model: 128
+  norm: layer # batch
+  layer:
+    _name_: mega
+    d_attin: 64   # Default for LRA-Image
+    d_attout: 320  # Default for LRA-Image
+    d_state: 16   # Default for LRA-Image
+    activation: silu
+    attention_activation: softmax
+    bidirectional: false
+    chunk: -1
+    l_max: null
+    norm: layer
+    prenorm: true
+    tie_dropout: false
+    rel_pos_bias: simple
+    max_positions: 1024
+    ff_expand: 2  # Expansion factor for FFN
+    dropout: 0.0
+    drop_attin: 0.0
+    drop_attout: 0.0
+    drop_ffn: 0.0
+    transposed: false
+
+
+dataset:
+    resolution: 32
+    sequential: True
+    val_split: 0.1
+    test_split: 0.1
+    mlm_prob: 0.0       # if 0 then sequence-level classification
+    causal_lm: false      # ${eval:not ${model.layer.bidirectional}}
+    lm_loss: ce           # l1 loss, use ce for classification
+    ignore_val: True      # if True ignore none masked tokens (-100 for CE, -10000 fr L1)
+
+loader:
+  batch_size: 32
+  num_workers: 4
+
+optimizer:
+  lr: 0.0005
+  weight_decay: 0.0
+
+trainer:
+  max_epochs: 50
+
+train:
+  seed: 2222
+  interval: step # For cosine scheduler
+  monitor: val/accuracy_ignore_m100  # Needed for plateau scheduler
+  mode: max
+
+task:
+  loss: cross_entropy  #class_weighted_cross_entropy
+  metrics:
+    - accuracy_ignore_m100
+
+#task:
+#  loss: masked_mae
+#  metrics:
+#    - masked_mae
+#    - masked_r2
+#  torchmetrics: null

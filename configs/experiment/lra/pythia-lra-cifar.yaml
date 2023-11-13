@@ -1,0 +1,29 @@
+# @package _global_
+defaults:
+  - /pipeline: cifar
+  - /model: transformer
+  - override /scheduler: constant_warmup
+
+scheduler:
+#  num_training_steps: 250000 # 50 epochs
+  num_warmup_steps: 2000 # 1 epoch
+
+decoder:
+  _name_: sequence_nonelinear
+  mode: pool
+
+dataset:
+  grayscale: true
+
+loader:
+  batch_size: 50
+
+optimizer:
+  lr: 0.001
+  weight_decay: 0.0
+
+trainer:
+  max_epochs: 200
+
+train:
+  seed: 2222

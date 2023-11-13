@@ -1,0 +1,14 @@
+_name_: sc_lm
+mfcc: False
+dropped_rate: 0.
+length: 16000
+all_classes: true # Use original dataset or 10-way version
+__l_max: ${.length}
+
+# Masked LM parameters
+mlm_prob: 0  # self pre-training : prob of masking out a pixel
+causal_lm: False  # self pre-training : predict next pixel in sequence
+lm_loss: 'l1'  # self pre-training loss: cross-entropy (ce) or l1
+ignore_val: True  # self pre-training: ignore the loss at masked pixels
+span_masking: False
+span_length: 0

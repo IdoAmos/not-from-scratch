@@ -1,0 +1,33 @@
+# @package _global_
+defaults:
+  - /pipeline: listops
+  - /model: pythia_lm
+  - override /scheduler: cosine_warmup # constant_warmup
+
+encoder: id
+
+model:
+  batch2tensor_fn: listops
+  causal: false
+  pretrained: true
+
+decoder:
+  mode: pool
+
+loader:
+  batch_size: 1
+
+optimizer:
+  lr: 0.01
+#  weight_decay: 0.05
+
+scheduler:
+  num_warmup_steps: 200
+  num_training_steps: 2000
+  # patience: 5
+
+trainer:
+  max_epochs: 200
+
+train:
+  seed: 2222

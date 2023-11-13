@@ -1,0 +1,22 @@
+# @package _global_
+defaults:
+  - imdb
+  - override /dataset: aan-lm
+
+task:
+   _name_: base
+   loss: cross_entropy
+   metrics:
+     - accuracy_ignore_m100
+   torchmetrics: null
+
+train:
+  monitor: val/accuracy_ignore_m100  # Needed for plateau scheduler
+  mode: max
+
+encoder: embedding
+
+decoder:
+  _name_: sequence
+  mode: last
+  use_lengths: false

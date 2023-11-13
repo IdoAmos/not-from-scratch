@@ -1,0 +1,53 @@
+# @package _global_
+defaults:
+  - /pipeline: imdb
+  - /model: transformer
+  - override /scheduler: cosine_warmup
+
+model:
+  dropout: 0.
+  n_layers: 6
+  prenorm: true
+  d_model: 512
+  norm: layer # batch
+  layer:
+    - _name_: mhfa
+      causal: false
+      n_heads: 8
+      dropout: null
+      bias: True
+      add_bias_kv: False  # not implementd yet
+      add_zero_attn: False # not implementd yet
+      kdim: null  # not implementd yet
+      vdim: null  # not implementd yet
+    - _name_: ff
+      expand: 4
+      activation: gelu
+      dropout: ${...dropout} # Same as null
+
+dataset:
+  l_max: 4096
+  level: char
+  append_cls: False
+
+loader:
+  batch_size: 32
+
+optimizer:
+  lr: 0.05
+  weight_decay: 0.1
+
+scheduler:
+  num_training_steps: 50000
+  num_warmup_steps: 2000
+
+trainer:
+  max_epochs: 65
+
+train:
+  seed: 2222
+
+decoder:
+  _name_: sequence_nonelinear
+  mode: pool
+  use_lengths: true

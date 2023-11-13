@@ -1,0 +1,48 @@
+# @package _global_
+defaults:
+  - /pipeline: sc-lm
+  - /model: transformer
+  - override /scheduler: constant_warmup
+#  - override /model/layer: performer
+
+model:
+  dropout: 0.
+  n_layers: 4
+  prenorm: true
+  d_model: 128
+  norm: layer # batch
+  encoder: null
+  layer:
+    - _name_: mhfla
+      causal: false
+      window_size: 4000
+      rotary: true
+      look_forward: 1
+      look_backward: 1
+      n_heads: 4  # in lra paper = 8
+      dropout: null
+      bias: True
+      add_bias_kv: False  # not implementd yet
+      add_zero_attn: False # not implementd yet
+      kdim: null  # not implementd yet
+      vdim: null  # not implementd yet
+    - _name_: ff
+      expand: 1
+      activation: gelu
+
+optimizer:
+  lr: 0.001
+  weight_decay: 0.05
+
+loader:
+  batch_size: 16
+
+trainer:
+  max_epochs: 200
+
+scheduler:
+#  num_training_steps: 250000 # 50 epochs
+  num_warmup_steps: 2000 # 1 epoch
+
+train:
+  seed: 1112

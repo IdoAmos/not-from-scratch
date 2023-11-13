@@ -1,0 +1,19 @@
+_name_: pathfinder_lm
+
+# data_dir: null
+resolution: 128
+sequential: True
+val_split: 0.1
+test_split: 0.1
+mlm_prob: 0.5
+ignore_val: True  # if True ignore none masked tokens (-100 for CE, -10000 fr L1)
+causal_lm: False
+lm_loss: l1  # ce
+span_masking: False
+span_length: 1
+
+
+seed: 42 # Controls the train/val/test split
+# __dataset_len: ${eval:599999 if ${.__resolution} == 32 else 600000}
+# __train_len: ${eval:int\(${__dataset_len} * \(1 - ${.val_split} - ${.test_split}\)\)}
+__l_max: ${eval:${.resolution}**2}

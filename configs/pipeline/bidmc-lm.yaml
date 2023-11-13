@@ -1,0 +1,27 @@
+# @package _global_
+defaults:
+  - /trainer: default
+  - /loader: default
+  - /dataset: adding
+  - /task: regression
+  - /optimizer: adamw
+  - /scheduler: constant
+
+train:
+  seed: 2222
+  interval: step # For cosine scheduler
+  monitor: val/masked_mae  # Needed for plateau scheduler
+  mode: min
+
+task:
+  loss: masked_mae
+  metrics:
+    - masked_mae
+    - masked_r2
+  torchmetrics: null
+
+encoder: linear
+
+decoder:
+  _name_: sequence
+  mode: last

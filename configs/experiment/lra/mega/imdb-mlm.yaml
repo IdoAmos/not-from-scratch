@@ -1,0 +1,56 @@
+# @package _global_
+defaults:
+  - /pipeline: imdb-lm
+  - /model: transformer
+  - override /scheduler: constant_warmup # cosine_warmup
+
+model:
+  dropout: 0.
+  n_layers: 6
+  prenorm: true
+  d_model: 512
+  norm: layer # batch
+  layer:
+    - _name_: mhfa
+      causal: false
+      n_heads: 8
+      dropout: null
+      bias: True
+      add_bias_kv: False  # not implementd yet
+      add_zero_attn: False # not implementd yet
+      kdim: null  # not implementd yet
+      vdim: null  # not implementd yet
+    - _name_: ff
+      expand: 4
+      activation: gelu
+      dropout: ${...dropout} # Same as null
+
+dataset:
+  l_max: 4096
+  level: char
+  append_cls: False
+
+  sequential: True
+  mlm_prob: 0.0         # self pre-training : prob of masking out a pixel
+  causal_lm: False    # self pre-training : predict next pixel in sequence
+  lm_loss: ce         # self pre-training loss: cross-entropy (ce) or l1
+  ignore_val: True    # ignore the loss at masked pixels
+  span_masking: False
+  span_length: 0
+
+loader:
+  batch_size: 32
+
+optimizer:
+  lr: 0.05
+  weight_decay: 0.1
+
+scheduler:
+#  num_training_steps: 250000 # 50 epochs
+  num_warmup_steps: 5000 # 1 epoch
+
+trainer:
+  max_epochs: 32
+
+train:
+  seed: 2222

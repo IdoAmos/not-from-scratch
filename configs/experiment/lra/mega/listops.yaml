@@ -1,0 +1,55 @@
+# @package _global_
+defaults:
+  - /pipeline: listops
+  - /model: mega
+  - override /scheduler: constant_warmup # cosine_warmup
+
+model:
+  dropout: 0.
+  n_layers: 6
+  prenorm: false
+  d_model: 80
+  layer:
+    _name_: mega
+    d_attin: 64   # Default for LRA-Image
+    d_attout: 160  # Default for LRA-Image
+    d_state: 16   # Default for LRA-Image
+    activation: silu
+    attention_activation: softmax
+    bidirectional: true
+    chunk: -1
+    l_max: null
+    norm: layer
+    prenorm: false
+    tie_dropout: false
+    rel_pos_bias: simple
+    max_positions: 4000
+    ff_expand: 2  # Expansion factor for FFN
+    dropout: 0.1
+    drop_attin: 0.1
+    drop_attout: 0.1
+    drop_ffn: 0.1
+    transposed: false
+
+
+loader:
+  batch_size: 32
+
+optimizer:
+  lr: 0.05
+  weight_decay: 0.0
+
+scheduler:
+  num_warmup_steps: 2000
+#  num_training_steps: 250000
+
+trainer:
+  max_epochs: 100
+
+train:
+  seed: 2222
+
+decoder:
+  _name_: sequence
+  mode: pool
+  use_lengths: true

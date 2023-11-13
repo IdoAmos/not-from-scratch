@@ -1,0 +1,20 @@
+_name_: cifar_lm
+
+# cifar configs
+permute: null
+grayscale: True
+tokenize: False
+augment: False
+cutout: False
+random_erasing: False
+val_split: 0.1
+test_split: 0.1
+seed: 42 # For validation split
+# __l_max: 1024
+
+# masked pre-training configs
+sequential: True
+mlm_prob: 0.0
+ignore_val: True  # if True ignore none masked tokens (-100 for CE, -10000 fr L1)
+causal_lm: False
+lm_loss: l1  # ce

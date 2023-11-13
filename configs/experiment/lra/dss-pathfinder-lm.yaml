@@ -1,0 +1,64 @@
+# @package _global_
+defaults:
+  - /pipeline: pathfinder-lm
+  - /model: dss
+  - override /scheduler: cosine_warmup
+
+model:
+  dropout: 0.
+  n_layers: 5
+  prenorm: true
+  d_model: 128
+  norm: layer
+  layer:
+    activation: gelu
+    postact: glu
+    bidirectional: true
+    lr:
+      Lambda: 0.0001
+      W: 0.0001
+      dt_min: 0.0001
+      dt_max: 0.001
+    max_kernel_length: null    # 8192 works well & is faster
+    
+    
+dataset:
+    resolution: 128
+    sequential: True
+    val_split: 0.1
+    test_split: 0.1
+    mlm_prob: 0.0
+    causal_lm: ${eval:not ${model.layer.bidirectional}}
+    lm_loss: l1
+
+loader:
+  batch_size: 16
+  num_workers: 4
+
+optimizer:
+  lr: 0.0001
+
+scheduler:
+  num_warmup_steps: 3000
+  num_training_steps: 150000 
+
+trainer:
+  max_epochs: 30
+  save_val_outputs: false
+
+train:
+  seed: 1112  
+  # monitor: val/accuracy_ignore_m100  # Needed for plateau scheduler
+  monitor: val/mae  # Needed for plateau scheduler
+  mode: max
+
+# task:
+#   loss: cross_entropy  #class_weighted_cross_entropy
+#   metrics:
+#     - accuracy_ignore_m100
+
+task:
+  loss: mae
+  metrics:
+    - mae
+    - r2
