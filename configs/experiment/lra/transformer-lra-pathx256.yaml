@@ -1,0 +1,54 @@
+# @package _global_
+defaults:
+  - /pipeline: pathx
+  - /model: transformer
+  - override /scheduler: constant_warmup # cosine_warmup
+
+scheduler:
+#  num_training_steps: 1000000 # if using cosine_warmup
+  num_warmup_steps: 5000 # 1 epoch
+
+model:
+  dropout: 0.
+  n_layers: 4
+  prenorm: true
+  d_model: 128
+  norm: layer # batch
+  layer:
+    - _name_: mhfla
+      causal: false
+      window_size: 8192
+      look_forward: 1
+      look_backward: 1
+      n_heads: 4
+      dropout: null
+      bias: True
+      add_bias_kv: False  # not implementd yet
+      add_zero_attn: False # not implementd yet
+      kdim: null  # not implementd yet
+      vdim: null  # not implementd yet
+      rotary: false
+    - _name_: ff
+      expand: 4
+      activation: gelu
+      dropout: ${...dropout} # Same as null
+
+dataset:
+  resolution: 256
+
+decoder:
+  mode: max
+
+loader:
+  batch_size: 32
+
+optimizer:
+  lr: 0.0005
+  weight_decay: 0.0
+
+trainer:
+  max_epochs: 200
+
+train:
+  seed: 2222
+  interval: step

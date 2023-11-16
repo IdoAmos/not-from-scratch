@@ -1,0 +1,68 @@
+# @package _global_
+defaults:
+  - /pipeline: pathfinder-lm
+  - /model: transformer
+  - override /scheduler: constant_warmup
+
+scheduler:
+  num_warmup_steps: 5000
+
+model:
+  dropout: 0.
+  n_layers: 8
+  prenorm: true
+  d_model: 128
+  norm: layer
+  layer:
+    - _name_: mhfla
+      causal: false
+      window_size: 8192
+      look_forward: 1
+      look_backward: 1
+      n_heads: 4
+      dropout: null
+      bias: True
+      add_bias_kv: False  # not implementd yet
+      add_zero_attn: False # not implementd yet
+      kdim: null  # not implementd yet
+      vdim: null  # not implementd yet
+      rotary: false
+    - _name_: ff
+      expand: 4
+      activation: gelu
+      dropout: ${...dropout} # Same as null
+
+
+dataset:
+    resolution: 256
+    sequential: True
+    val_split: 0.1
+    test_split: 0.1
+    mlm_prob: 0.5        # if 0 then sequence-level classification
+    causal_lm: false      # ${eval:not ${model.layer.bidirectional}}
+    lm_loss: ce          # l1 loss, use ce for classification
+    ignore_val: true      # if True ignore none masked tokens (-100 for CE, -10000 fr L1)
+    span_masking: False   # if True use span masking - a la SpanBERT
+    span_length: 1      # length of span to mask (< 1 indicates fraction of seq size, > 1 indicates num. tokens)
+
+loader:
+  batch_size: 32
+  num_workers: 4
+
+optimizer:
+  lr: 0.0005
+  weight_decay: 0.0
+
+trainer:
+  max_epochs: 200
+
+train:
+  seed: 2222
+  interval: step # For cosine scheduler
+  monitor: val/accuracy_ignore_m100 # val/mae # Needed for plateau scheduler
+  mode: max
+
+task:
+   loss: cross_entropy  #class_weighted_cross_entropy
+   metrics:
+     - accuracy_ignore_m100
