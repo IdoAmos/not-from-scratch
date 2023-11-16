@@ -1,6 +1,6 @@
 # *Never Train from Scratch*: Fair Comparison of Long-Sequence Models Requires Data-Driven Priors 
 
-This repository provides implementations and experiments in: https://arxiv.org/pdf/2310.02980.pdf
+This repository provides implementations for experiments in the paper: https://arxiv.org/pdf/2310.02980.pdf
 
 The code and structure of this repository is based upon the official code of S4, please refer to
 their readme file [README_S4.md](README_S4.md) for more information, most relevant are the 'Experiments', 
@@ -33,7 +33,7 @@ python train.py experiment=lra/transformer-lra-cifar-mlm dataset.mlm_prob=0.5 tr
 python train.py experiment=lra/transformer-lra-cifar-mlm dataset.causal_lm=true dataset.mlm_prob=0.0 \
 model.layer.causal=true train.manual_checkpoints=true
 ~~~
-the ```train.manual_checkpoints=true``` flag provides the last epoch and best model for the desired metric, 
+the ```train.manual_checkpoints=true``` flag keeps track of the last epoch and best model checkpoint for the desired metric, 
 specified by ```train.monitor``` in the config file, automatic model checkpoints are generated via ```wandb```.
 
 Pretrained models are saved in: 

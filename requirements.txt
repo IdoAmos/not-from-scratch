@@ -1,7 +1,7 @@
 numpy
 scipy
 pandas
-sklearn
+scikit-learn
 matplotlib
 tqdm
 rich
@@ -14,14 +14,18 @@ opt_einsum
 cmake # For pykeops support
 pykeops # If there are installation problems with pykeops==2.x, try pykeops==1.5
 transformers # For some schedulers
+rotary-embedding-torch # For rotary position embeddings
 
 # Model specific packges
 # pytorch-fast-transformers # for Performer
 
 # Dataset specific packages
 torchtext # LRA
+torchdata
+torchmetrics
+
 datasets # LRA
 # gluonts
 # timm
 # lightning-bolts
-# sktime # BIDMC
+sktime # BIDMC

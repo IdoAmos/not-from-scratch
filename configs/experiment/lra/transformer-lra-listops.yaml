@@ -20,6 +20,7 @@ model:
       add_zero_attn: False # not implementd yet
       kdim: null  # not implementd yet
       vdim: null  # not implementd yet
+      rotary: false
     - _name_: ff
       expand: 4
       activation: gelu

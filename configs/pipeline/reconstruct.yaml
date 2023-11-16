@@ -1,6 +1,0 @@
-# @package _global_
-defaults:
-  - adding
-  - override /dataset: reconstruct
-
-# encoder: embedding

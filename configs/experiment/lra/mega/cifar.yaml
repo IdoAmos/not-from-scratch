@@ -2,42 +2,23 @@
 defaults:
   - /pipeline: cifar
   - /model: mega
-  - override /scheduler: constant_warmup
-
-scheduler:
-#  num_training_steps: 250000 # 50 epochs
-  num_warmup_steps: 2000 # 1 epoch
+  - override /scheduler: cosine_warmup
 
 model:
-  dropout: 0.
+  dropout: 0.0
+  tie_dropout: false
   n_layers: 8
-  prenorm: true
   d_model: 160
+  prenorm: true
   layer:
-    _name_: mega
-    d_attin: 96   # Default for LRA-Image
-    d_attout: 320  # Default for LRA-Image
-    d_state: 16   # Default for LRA-Image
-    activation: silu
+    norm: batch
+    d_attin: 64
+    d_attout: 320
+    d_state: 16
     attention_activation: laplace
+    chunk: 128
     bidirectional: true
-    chunk: -1
-    l_max: null
-    norm: batch_sync
-    prenorm: True
-    tie_dropout: false
-    rel_pos_bias: simple
-    max_positions: 4000
-    ff_expand: 2  # Expansion factor for FFN
-    dropout: 0.0
-    drop_attin: 0.0
-    drop_attout: 0.0
-    drop_ffn: 0.0
-    transposed: false
-
-decoder:
-  _name_: sequence_nonelinear
-  mode: pool
+    mode: mega
 
 dataset:
   grayscale: true
@@ -46,11 +27,20 @@ loader:
   batch_size: 50
 
 optimizer:
-  lr: 0.001
-  weight_decay: 0.0
+  lr: 0.01
+  weight_decay: 0.02
+  betas:
+    - 0.9
+    - 0.98  # Default is 0.999, never seen anyone optimize this before!
 
 trainer:
   max_epochs: 200
+  gradient_clip_val: 1.0
+
+scheduler:
+  num_warmup_steps: 10000
+  num_training_steps: 200000
 
 train:
   seed: 2222
+  name: Large Mega block - EMA

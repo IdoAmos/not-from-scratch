@@ -54,12 +54,14 @@ class PythiaWrapper(SequenceModule):
         src_tokenizer: the tokenizer used for the input, used to map the input to the model tokens
         txt_input: whether the input is text or not, if not, the input is expected to be integers
     """
-    def __init__(self, flash_attn=True, src_tokenizer=None, batch2tensor_fn=None, causal=False, pretrained=True, **kwargs):
+    def __init__(self, flash_attn=True, src_tokenizer=None, batch2tensor_fn=None, causal=False, pretrained=True,
+                 use_pythia_embeddings=True, **kwargs):
         super(PythiaWrapper, self).__init__()
 
         self.model_id = 'EleutherAI/pythia-70m-deduped'
         self.cache_dir = './cache'
         self.pretrained = pretrained
+        self.use_pythia_embeddings = use_pythia_embeddings
 
         if self.pretrained:
             self.model = AutoModel.from_pretrained(self.model_id, cache_dir=self.cache_dir)
@@ -159,11 +161,14 @@ class PythiaWrapper(SequenceModule):
         Wraps the forward method of LLM with a mapping to match the encoders
         """
         # map input to tokens matching the model
-        if self.pretrained:
-            input_device = x.device
-            x = self.apply_batch_mapping(x)
-            x = x.to(input_device)
+        if self.use_pythia_embeddings:
+            if self.pretrained:
+                input_device = x.device
+                x = self.apply_batch_mapping(x)
+                x = x.to(input_device)
 
-        h = self.model(x).last_hidden_state
+            h = self.model(x).last_hidden_state
+        else:
+            h = self.model(inputs_embeds=x)
 
         return h, None
