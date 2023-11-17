@@ -70,7 +70,7 @@ wandb:
   save_dir: null
   id: null # pass correct id to resume experiment!
   # Below options should not need to be specified
-  entity: 'idoamos'  # set to name of your wandb team or just remove it
+  entity: ''  # set to name of your wandb team or just remove it
   name: ''
   # log_model: False
   # prefix: ""
