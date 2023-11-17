@@ -1,6 +1,6 @@
 # *Never Train from Scratch*: Fair Comparison of Long-Sequence Models Requires Data-Driven Priors 
 
-This repository provides implementations for experiments in the paper: https://arxiv.org/pdf/2310.02980.pdf
+This repository provides implementations for experiments in the paper
 
 The code and structure of this repository is based upon the official code of S4, please refer to
 their readme file [README_S4.md](README_S4.md) for more information, most relevant are the 'Experiments', 

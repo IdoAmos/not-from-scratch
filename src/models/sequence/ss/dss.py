@@ -429,7 +429,7 @@ class DLRKernel(OptimModule):
         super().__init__()
         self.version = version
         assert version in ['Lambda_imag_W_real', 'Lambda_imag', '', 'Lambda_real_W_real']
-        self.N, self.H, self.channels = N, H, channels
+        self.N, self.H, self.channels = N, H, channels////
         self.Lambda_init = Lambda_init
         self.W_scale = 1/N if W_scale is None else W_scale
         self.kernel_to_real, self.pykeops = kernel_to_real, pykeops and has_pykeops

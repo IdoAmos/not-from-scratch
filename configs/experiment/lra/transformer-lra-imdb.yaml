@@ -2,7 +2,7 @@
 defaults:
   - /pipeline: imdb
   - /model: transformer
-  - override /scheduler: cosine_warmup
+  - override /scheduler: constant_warmup  # cosine_warmup
 
 model:
   dropout: 0.
@@ -39,7 +39,7 @@ optimizer:
   weight_decay: 0.1
 
 scheduler:
-  num_training_steps: 50000
+#  num_training_steps: 50000  # for cosine scheduler
   num_warmup_steps: 2000
 
 trainer:
