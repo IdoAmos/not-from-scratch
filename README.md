@@ -31,7 +31,7 @@ The following pretrains a transformer model with 50% masking ratio or causal mas
 ~~~
 python train.py experiment=lra/transformer-lra-cifar-mlm dataset.mlm_prob=0.5 train.manual_checkpoints=true
 python train.py experiment=lra/transformer-lra-cifar-mlm dataset.causal_lm=true dataset.mlm_prob=0.0 \
-model.layer.causal=true train.manual_checkpoints=true
+model.layer.0.causal=true train.manual_checkpoints=true
 ~~~
 the ```train.manual_checkpoints=true``` flag keeps track of the last epoch and best model checkpoint for the desired metric, 
 specified by ```train.monitor``` in the config file, automatic model checkpoints are generated via ```wandb```.
